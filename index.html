@@ -1,0 +1,608 @@
+<html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>US Passport Example</title>
+    <script type="text/javascript"
+        src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=NBznrtLjLsz455q8JKoNlT2ONC5IJ0OCAk9lrWUl5tSsXQG5KxIacI5kjjd7iMmg3ZkAzpqdojKQ_9nqjqVUBg"
+        charset="UTF-8"></script>
+    <style>
+        /* Оставляем CSS как есть, но убеждаемся, что все селекторы начинаются с #passport-app-container */
+        /* Это обеспечивает изоляцию стилей внутри контейнера виджета */
+
+        #passport-app-container {
+            /* Добавил этот селектор для обертки всего виджета, если он еще не существует */
+            font-family: 'Courier New', monospace;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            color: #333;
+            border: 1px solid #cccccc;
+            /* Добавил границу для наглядности контейнера */
+        }
+
+        #passport-app-container .us-passport {
+            display: flex;
+            background-color: #e3e6ec;
+            border: 1px solid #999;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+            min-height: 420px;
+        }
+
+        /* Медиа-запрос для экранов меньше 1024px */
+        @media (max-width: 1023px) {
+            #passport-app-container .us-passport {
+                flex-direction: column;
+                height: auto;
+            }
+
+            #passport-app-container .passport-left-side {
+                border-right: none;
+                border-bottom: 2px dotted #999;
+                margin-bottom: 20px;
+                padding-bottom: 20px;
+            }
+
+            #passport-app-container .passport-right-side {
+                padding-top: 20px;
+            }
+
+            #passport-app-container .passport-stamp {
+                position: relative;
+                bottom: auto;
+                right: auto;
+                margin-top: 30px;
+                margin-left: auto;
+            }
+
+            #passport-app-container .control-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            #passport-app-container .control-row label {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+        }
+
+        #passport-app-container .passport-left-side,
+        #passport-app-container .passport-right-side {
+            flex: 1;
+            padding: 15px;
+        }
+
+        #passport-app-container .passport-left-side {
+            border-right: 2px dotted #999;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #passport-app-container .passport-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #passport-app-container .passport-header h2 {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #00205b;
+        }
+
+        #passport-app-container .passport-emblem {
+            width: 90px;
+            height: 90px;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/2/26/Seal_of_the_President_of_the_United_States_without_words.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            margin: 0 auto;
+        }
+
+        #passport-app-container .passport-photo-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #passport-app-container .passport-photo {
+            width: 150px;
+            height: 200px;
+            border: 1px solid #999;
+            overflow: hidden;
+            background-color: #fff;
+            margin-bottom: 20px;
+            /* Уменьшил отступ, если нужно */
+            display: flex;
+            /* Добавлено для центрирования */
+            justify-content: center;
+            /* Добавлено для центрирования */
+            align-items: center;
+            /* Добавлено для центрирования */
+        }
+
+        #passport-app-container .passport-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #passport-app-container .passport-data {
+            margin-bottom: 20px;
+        }
+
+        #passport-app-container .data-row {
+            margin-bottom: 15px;
+        }
+
+        #passport-app-container .data-label {
+            display: block;
+            font-size: 10px;
+            color: #666;
+            margin-bottom: 2px;
+        }
+
+        #passport-app-container .data-value {
+            display: block;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            word-wrap: break-word;
+            /* Добавлено для переноса длинных слов */
+        }
+
+        #passport-app-container .passport-right-side {
+            position: relative;
+        }
+
+        #passport-app-container .passport-stamp {
+            position: absolute;
+            bottom: 10px;
+            right: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #passport-app-container .stamp-circle {
+            width: 120px;
+            height: 120px;
+            border: 2px solid #c4002f;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform: rotate(-15deg);
+            color: #c4002f;
+            opacity: 0.8;
+
+            @media(width<1024px) {
+                display: none;
+            }
+        }
+
+        #passport-app-container .stamp-text {
+            text-align: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        #passport-app-container .stamp-top,
+        #passport-app-container .stamp-bottom {
+            font-size: 10px;
+        }
+
+        #passport-app-container .stamp-date {
+            font-size: 14px;
+            margin: 5px 0;
+        }
+
+        #passport-app-container .passport-controls {
+            margin-top: 30px;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        #passport-app-container .passport-controls h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #00205b;
+        }
+
+        #passport-app-container .control-row {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        #passport-app-container .control-row label {
+            width: 200px;
+            /* Можно уменьшить, если нужно */
+            min-width: 150px;
+            /* Добавил минимальную ширину */
+            font-size: 14px;
+            margin-right: 10px;
+            /* Добавил отступ справа */
+        }
+
+        #passport-app-container .control-row input {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #passport-app-container #update-passport {
+            background-color: #00205b;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+            /* Сделал блочным элементом для удобства */
+            width: 100%;
+            /* Растянул на всю ширину контролов */
+            box-sizing: border-box;
+            /* Учел padding и border в ширине */
+        }
+
+        #passport-app-container #update-passport:hover {
+            background-color: #001845;
+        }
+
+        #passport-app-container .signature-area {
+            border-bottom: 1px solid #666;
+            min-height: 50px;
+            /* Убедитесь, что высота достаточна */
+            padding: 5px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Центрирование содержимого */
+            position: relative;
+            /* Для позиционирования плейсхолдера */
+            background-color: #fff;
+            /* Добавил фон для лучшей видимости */
+        }
+
+        #passport-app-container #signature-image {
+            display: none;
+            /* Изначально скрыто */
+            max-width: 100%;
+            /* Ограничиваем максимальную ширину */
+            max-height: 50px;
+            /* Ограничиваем максимальную высоту */
+            object-fit: contain;
+            /* Сохраняем пропорции изображения */
+        }
+
+        #passport-app-container #no-signature-placeholder {
+            color: #999;
+            font-style: italic;
+            font-size: 14px;
+            /* Увеличил размер для читаемости */
+            text-align: center;
+            /* Центрировал текст */
+            position: absolute;
+            /* Позиционируем абсолютно */
+            top: 50%;
+            /* Вертикальное центрирование */
+            left: 50%;
+            /* Горизонтальное центрирование */
+            transform: translate(-50%, -50%);
+            /* Точное центрирование */
+            width: 100%;
+            /* Занимает всю ширину области */
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="passport-app-container"> <!-- Убедитесь, что весь ваш HTML обернут в этот контейнер -->
+        <div class="us-passport">
+            <div class="passport-left-side">
+                <div class="passport-header">
+                    <div class="passport-emblem"></div>
+                    <h2>UNITED STATES OF AMERICA</h2>
+                </div>
+                <div class="passport-photo-area">
+                    <div class="passport-photo" id="passport-photo-div">
+                        <!-- Изменил ID, чтобы не конфликтовать с img -->
+                        <img id="passport-photo-img" src="https://placehold.co/150x200" alt="Фото владельца паспорта">
+                    </div>
+                </div>
+            </div>
+            <div class="passport-right-side">
+                <div class="passport-data">
+                    <div class="data-row">
+                        <span class="data-label">ФАМИЛИЯ / SURNAME:</span>
+                        <span class="data-value" id="display-surname">SMITH</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">ИМЯ / GIVEN NAME:</span>
+                        <span class="data-value" id="display-given-name">JOHN MICHAEL</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">ГРАЖДАНСТВО С / NATIONALITY ACQUIRED:</span>
+                        <span class="data-value" id="display-citizenship-date">05 JUN 2010</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">ШТАТ ПРОЖИВАНИЯ / STATE OF RESIDENCE:</span>
+                        <span class="data-value" id="display-state">CALIFORNIA</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">ID АККАУНТА / ACCOUNT ID:</span>
+                        <span class="data-value" id="display-passport-id">A1234567</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="data-label">ПОДПИСЬ / SIGNATURE:</span>
+                        <div class="signature-area" id="signature-area">
+                            <img id="signature-image" src="" alt="Подпись владельца" style="display: none;">
+                            <div id="no-signature-placeholder">Нет подписи</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="passport-stamp">
+                    <div class="stamp-circle">
+                        <div class="stamp-text">
+                            <div class="stamp-top">UNITED STATES</div>
+                            <div class="stamp-date">APPROVED</div> <!-- Можно сделать и эту дату настраиваемой -->
+                            <div class="stamp-bottom">LEGACY INS</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="passport-controls">
+            <h3>Персонализировать паспорт</h3>
+            <div class="control-row">
+                <label for="input-given-name">Имя:</label>
+                <input type="text" id="input-given-name">
+            </div>
+            <div class="control-row">
+                <label for="input-surname">Фамилия:</label>
+                <input type="text" id="input-surname"> <!-- Убрал value, будет загружаться из localStorage -->
+            </div>
+            <div class="control-row">
+                <label for="input-citizenship-date">Дата получения гражданства:</label>
+                <input type="text" id="input-citizenship-date">
+            </div>
+            <div class="control-row">
+                <label for="input-state">Штат проживания:</label>
+                <input type="text" id="input-state">
+            </div>
+            <div class="control-row">
+                <label for="input-passport-id">ID аккаунта:</label>
+                <input type="text" id="input-passport-id" placeholder="ID профиля из ссылки на ваш аккаунт">
+            </div>
+            <div class="control-row">
+                <label for="input-photo">URL фотографии:</label>
+                <input type="text" id="input-photo">
+            </div>
+            <div class="control-row">
+                <label for="input-signature">URL подписи:</label>
+                <input type="text" id="input-signature" placeholder="Введите URL изображения с подписью">
+            </div>
+            <button id="update-passport">Обновить паспорт и сохранить</button>
+        </div>
+    </div>
+
+    <script>
+        // Используем IIFE (Immediately Invoked Function Expression) для изоляции кода.
+        // Весь код будет выполняться в своей собственной области видимости.
+        (function () {
+
+            // 1. Строго ограничиваем область действия скрипта контейнером #passport-app-container
+            // Это КЛЮЧЕВОЙ момент для предотвращения взаимодействия с остальной частью сайта politsim.ru
+            const appContainer = document.getElementById('passport-app-container');
+
+            // Если контейнер не найден на странице, прекращаем выполнение скрипта, чтобы избежать ошибок.
+            if (!appContainer) {
+                console.error('Контейнер паспорта #passport-app-container не найден!');
+                return;
+            }
+
+            // 2. Используем функцию-помощник для поиска элементов ТОЛЬКО ВНУТРИ нашего контейнера.
+            // Это предотвращает случайный выбор элементов с такими же ID/селекторами за пределами виджета.
+            function findElement(selector) {
+                const element = appContainer.querySelector(selector);
+                // Добавим проверку, чтобы легче отлаживать, если элемент не найден
+                if (!element) {
+                    console.warn(`Элемент с селектором "${selector}" не найден внутри #passport-app-container.`);
+                }
+                return element;
+            }
+
+            // 3. Получаем ссылки на все необходимые элементы, используя findElement.
+            // Используем более описательные имена переменных, где это возможно.
+            const updateButton = findElement('#update-passport');
+
+            // Поля ввода данных
+            const inputFields = {
+                surname: findElement('#input-surname'),
+                givenName: findElement('#input-given-name'),
+                passportId: findElement('#input-passport-id'), // ДОБАВЛЕНО
+                citizenshipDate: findElement('#input-citizenship-date'),
+                state: findElement('#input-state'),
+                photoUrl: findElement('#input-photo'),
+                signatureUrl: findElement('#input-signature')
+            };
+
+            const displayElements = {
+                surname: findElement('#display-surname'),
+                givenName: findElement('#display-given-name'),
+                passportId: findElement('#display-passport-id'), // ДОБАВЛЕНО
+                citizenshipDate: findElement('#display-citizenship-date'),
+                state: findElement('#display-state'),
+                photoImg: findElement('#passport-photo-img'),
+                signatureImage: findElement('#signature-image'),
+                signaturePlaceholder: findElement('#no-signature-placeholder')
+            };
+
+            // 4. Уникальный ключ для localStorage.
+            // Важно: Он должен быть уникальным для ЭТОГО КОНКРЕТНОГО ПАСПОРТА на странице.
+            // Если на одной странице может быть несколько таких паспортов, нужно генерировать
+            // действительно уникальный ID (например, на основе данных поста или случайной строки).
+            // Для простоты предположим, что на странице только один такой виджет или что этот ID достаточен.
+            // Если этот виджет используется в разных постах, этот ключ будет одинаковым для всех,
+            // но данные будут сохраняться для каждого пользователя отдельно в его браузере.
+            const storageKey = 'passport_data_us_politsim_v1'; // Используем осмысленный, но специфичный ключ
+
+            // 5. Функция для обновления отображения паспорта на основе переданных данных
+            function updatePassportDisplay(data) {
+                if (!data) return; // Не обновлять, если нет данных
+
+                // Обновляем текстовые поля
+                if (displayElements.surname) displayElements.surname.textContent = data.surname || 'N/A';
+                if (displayElements.givenName) displayElements.givenName.textContent = data.givenName || 'N/A';
+                if (displayElements.passportId) displayElements.passportId.textContent = data.passportId || 'N/A'; // ДОБАВЛЕНО
+                if (displayElements.citizenshipDate) displayElements.citizenshipDate.textContent = data.citizenshipDate || 'N/A';
+                if (displayElements.state) displayElements.state.textContent = data.state || 'N/A';
+
+                // Обновляем фото
+                if (displayElements.photoImg) {
+                    displayElements.photoImg.src = data.photoUrl || 'https://placehold.co/150x200?text=No+Photo'; // Заглушка, если URL пуст
+                    displayElements.photoImg.alt = `Фото ${data.givenName || ''} ${data.surname || ''}`;
+                }
+
+                // Обновляем подпись
+                if (displayElements.signatureImage && displayElements.signaturePlaceholder) {
+                    if (data.signatureUrl) {
+                        displayElements.signatureImage.src = data.signatureUrl;
+                        displayElements.signatureImage.style.display = 'block'; // Показываем изображение
+                        displayElements.signaturePlaceholder.style.display = 'none'; // Скрываем плейсхолдер
+                    } else {
+                        displayElements.signatureImage.src = ''; // Очищаем src на всякий случай
+                        displayElements.signatureImage.style.display = 'none'; // Скрываем изображение
+                        displayElements.signaturePlaceholder.style.display = 'block'; // Показываем плейсхолдер
+                    }
+                    displayElements.signatureImage.alt = `Подпись ${data.givenName || ''} ${data.surname || ''}`;
+                }
+            }
+
+            // 6. Функция для сохранения данных из полей ввода в localStorage
+            function saveData() {
+                const dataToSave = {
+                    surname: inputFields.surname ? inputFields.surname.value.trim() : '',
+                    givenName: inputFields.givenName ? inputFields.givenName.value.trim() : '',
+                    passportId: inputFields.passportId ? inputFields.passportId.value.trim() : '', // ДОБАВЛЕНО
+                    citizenshipDate: inputFields.citizenshipDate ? inputFields.citizenshipDate.value.trim() : '',
+                    state: inputFields.state ? inputFields.state.value.trim() : '',
+                    photoUrl: inputFields.photoUrl ? inputFields.photoUrl.value.trim() : '',
+                    signatureUrl: inputFields.signatureUrl ? inputFields.signatureUrl.value.trim() : ''
+                };
+                try {
+                    localStorage.setItem(storageKey, JSON.stringify(dataToSave));
+                } catch (error) {
+                    // ...
+                }
+            }
+
+            try {
+                // Используем JSON.stringify для преобразования объекта в строку перед сохранением
+                localStorage.setItem(storageKey, JSON.stringify(dataToSave));
+                // console.log('Данные паспорта сохранены в localStorage:', dataToSave); // Для отладки
+            } catch (error) {
+                console.error('Ошибка при сохранении данных в localStorage:', error);
+                // Можно уведомить пользователя, если сохранение критично
+                // alert('Не удалось сохранить данные паспорта. Возможно, localStorage отключен или переполнен.');
+            }
+        }
+
+            // 7. Функция для загрузки данных из localStorage при инициализации скрипта
+            function loadData() {
+            try {
+                const savedDataString = localStorage.getItem(storageKey);
+                if (savedDataString) {
+                    const savedData = JSON.parse(savedDataString);
+                    if (inputFields.surname) inputFields.surname.value = savedData.surname || '';
+                    if (inputFields.givenName) inputFields.givenName.value = savedData.givenName || '';
+                    if (inputFields.passportId) inputFields.passportId.value = savedData.passportId || ''; // ДОБАВЛЕНО
+                    if (inputFields.citizenshipDate) inputFields.citizenshipDate.value = savedData.citizenshipDate || '';
+                    if (inputFields.state) inputFields.state.value = savedData.state || '';
+                    if (inputFields.photoUrl) inputFields.photoUrl.value = savedData.photoUrl || '';
+                    if (inputFields.signatureUrl) inputFields.signatureUrl.value = savedData.signatureUrl || '';
+                    updatePassportDisplay(savedData);
+                } else {
+                    if (inputFields.surname) inputFields.surname.value = 'SMITH';
+                    if (inputFields.givenName) inputFields.givenName.value = 'JOHN MICHAEL';
+                    if (inputFields.passportId) inputFields.passportId.value = 'A1234567'; // ДОБАВЛЕНО
+                    if (inputFields.citizenshipDate) inputFields.citizenshipDate.value = '05 JUN 2010';
+                    if (inputFields.state) inputFields.state.value = 'CALIFORNIA';
+                    if (inputFields.photoUrl) inputFields.photoUrl.value = 'https://placehold.co/150x200';
+                    if (inputFields.signatureUrl) inputFields.signatureUrl.value = '';
+                    loadCurrentInputDataAndUpdateDisplay();
+                }
+            } catch (error) {
+                if (inputFields.surname) inputFields.surname.value = 'SMITH';
+                if (inputFields.givenName) inputFields.givenName.value = 'JOHN MICHAEL';
+                if (inputFields.passportId) inputFields.passportId.value = 'A1234567'; // ДОБАВЛЕНО
+                if (inputFields.citizenshipDate) inputFields.citizenshipDate.value = '05 JUN 2010';
+                if (inputFields.state) inputFields.state.value = 'CALIFORNIA';
+                if (inputFields.photoUrl) inputFields.photoUrl.value = 'https://placehold.co/150x200';
+                if (inputFields.signatureUrl) inputFields.signatureUrl.value = '';
+                loadCurrentInputDataAndUpdateDisplay();
+            }
+        }
+        // 8. Вспомогательная функция для сбора данных из текущих полей ввода
+        function getCurrentInputData() {
+            return {
+                surname: inputFields.surname ? inputFields.surname.value.trim().toUpperCase() : '',
+                givenName: inputFields.givenName ? inputFields.givenName.value.trim().toUpperCase() : '',
+                passportId: inputFields.passportId ? inputFields.passportId.value.trim().toUpperCase() : '', // ДОБАВЛЕНО
+                citizenshipDate: inputFields.citizenshipDate ? inputFields.citizenshipDate.value.trim().toUpperCase() : '',
+                state: inputFields.state ? inputFields.state.value.trim().toUpperCase() : '',
+                photoUrl: inputFields.photoUrl ? inputFields.photoUrl.value.trim() : '',
+                signatureUrl: inputFields.signatureUrl ? inputFields.signatureUrl.value.trim() : ''
+            };
+        }
+
+        // 9. Функция, которая собирает текущие данные из инпутов и обновляет отображение
+        function loadCurrentInputDataAndUpdateDisplay() {
+            const currentData = getCurrentInputData();
+            updatePassportDisplay(currentData);
+        }
+
+
+        // 10. Добавляем обработчик события на кнопку "Обновить паспорт"
+        // Проверяем, что кнопка существует, прежде чем навешивать обработчик
+        if (updateButton) {
+            updateButton.addEventListener('click', function () {
+                // console.log('Кнопка "Обновить паспорт" нажата.'); // Для отладки
+                // Шаг 1: Обновить отображение паспорта текущими данными из полей ввода
+                loadCurrentInputDataAndUpdateDisplay();
+                // Шаг 2: Сохранить текущие данные из полей ввода в localStorage
+                saveData();
+                // Можно добавить уведомление об успешном сохранении
+                // alert('Данные паспорта обновлены и сохранены!');
+            });
+        } else {
+            console.warn('Кнопка #update-passport не найдена. Функционал обновления и сохранения не будет работать.');
+        }
+
+        // 11. Загружаем данные при первой загрузке скрипта
+        // Это произойдет после определения всех функций и получения ссылок на элементы.
+        loadData();
+
+        }) (); // Конец IIFE
+    </script>
+
+</body>
+
+</html>
