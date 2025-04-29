@@ -501,7 +501,7 @@
                 const dataToSave = {
                     surname: inputFields.surname ? inputFields.surname.value.trim() : '',
                     givenName: inputFields.givenName ? inputFields.givenName.value.trim() : '',
-                    passportId: inputFields.passportId ? inputFields.passportId.value.trim() : '', // ДОБАВЛЕНО
+                    passportId: inputFields.passportId ? inputFields.passportId.value.trim() : '',
                     citizenshipDate: inputFields.citizenshipDate ? inputFields.citizenshipDate.value.trim() : '',
                     state: inputFields.state ? inputFields.state.value.trim() : '',
                     photoUrl: inputFields.photoUrl ? inputFields.photoUrl.value.trim() : '',
@@ -509,37 +509,38 @@
                 };
                 try {
                     localStorage.setItem(storageKey, JSON.stringify(dataToSave));
+                    // console.log('Данные паспорта сохранены в localStorage:', dataToSave); // Для отладки
                 } catch (error) {
-                    // ...
+                    console.error('Ошибка при сохранении данных в localStorage:', error);
+                    // Можно уведомить пользователя, если сохранение критично
+                    // alert('Не удалось сохранить данные паспорта. Возможно, localStorage отключен или переполнен.');
                 }
             }
-
-            try {
-                // Используем JSON.stringify для преобразования объекта в строку перед сохранением
-                localStorage.setItem(storageKey, JSON.stringify(dataToSave));
-                // console.log('Данные паспорта сохранены в localStorage:', dataToSave); // Для отладки
-            } catch (error) {
-                console.error('Ошибка при сохранении данных в localStorage:', error);
-                // Можно уведомить пользователя, если сохранение критично
-                // alert('Не удалось сохранить данные паспорта. Возможно, localStorage отключен или переполнен.');
-            }
-        }
-
             // 7. Функция для загрузки данных из localStorage при инициализации скрипта
             function loadData() {
-            try {
-                const savedDataString = localStorage.getItem(storageKey);
-                if (savedDataString) {
-                    const savedData = JSON.parse(savedDataString);
-                    if (inputFields.surname) inputFields.surname.value = savedData.surname || '';
-                    if (inputFields.givenName) inputFields.givenName.value = savedData.givenName || '';
-                    if (inputFields.passportId) inputFields.passportId.value = savedData.passportId || ''; // ДОБАВЛЕНО
-                    if (inputFields.citizenshipDate) inputFields.citizenshipDate.value = savedData.citizenshipDate || '';
-                    if (inputFields.state) inputFields.state.value = savedData.state || '';
-                    if (inputFields.photoUrl) inputFields.photoUrl.value = savedData.photoUrl || '';
-                    if (inputFields.signatureUrl) inputFields.signatureUrl.value = savedData.signatureUrl || '';
-                    updatePassportDisplay(savedData);
-                } else {
+                try {
+                    const savedDataString = localStorage.getItem(storageKey);
+                    if (savedDataString) {
+                        const savedData = JSON.parse(savedDataString);
+                        if (inputFields.surname) inputFields.surname.value = savedData.surname || '';
+                        if (inputFields.givenName) inputFields.givenName.value = savedData.givenName || '';
+                        if (inputFields.passportId) inputFields.passportId.value = savedData.passportId || ''; // ДОБАВЛЕНО
+                        if (inputFields.citizenshipDate) inputFields.citizenshipDate.value = savedData.citizenshipDate || '';
+                        if (inputFields.state) inputFields.state.value = savedData.state || '';
+                        if (inputFields.photoUrl) inputFields.photoUrl.value = savedData.photoUrl || '';
+                        if (inputFields.signatureUrl) inputFields.signatureUrl.value = savedData.signatureUrl || '';
+                        updatePassportDisplay(savedData);
+                    } else {
+                        if (inputFields.surname) inputFields.surname.value = 'SMITH';
+                        if (inputFields.givenName) inputFields.givenName.value = 'JOHN MICHAEL';
+                        if (inputFields.passportId) inputFields.passportId.value = 'A1234567'; // ДОБАВЛЕНО
+                        if (inputFields.citizenshipDate) inputFields.citizenshipDate.value = '05 JUN 2010';
+                        if (inputFields.state) inputFields.state.value = 'CALIFORNIA';
+                        if (inputFields.photoUrl) inputFields.photoUrl.value = 'https://placehold.co/150x200';
+                        if (inputFields.signatureUrl) inputFields.signatureUrl.value = '';
+                        loadCurrentInputDataAndUpdateDisplay();
+                    }
+                } catch (error) {
                     if (inputFields.surname) inputFields.surname.value = 'SMITH';
                     if (inputFields.givenName) inputFields.givenName.value = 'JOHN MICHAEL';
                     if (inputFields.passportId) inputFields.passportId.value = 'A1234567'; // ДОБАВЛЕНО
@@ -549,58 +550,48 @@
                     if (inputFields.signatureUrl) inputFields.signatureUrl.value = '';
                     loadCurrentInputDataAndUpdateDisplay();
                 }
-            } catch (error) {
-                if (inputFields.surname) inputFields.surname.value = 'SMITH';
-                if (inputFields.givenName) inputFields.givenName.value = 'JOHN MICHAEL';
-                if (inputFields.passportId) inputFields.passportId.value = 'A1234567'; // ДОБАВЛЕНО
-                if (inputFields.citizenshipDate) inputFields.citizenshipDate.value = '05 JUN 2010';
-                if (inputFields.state) inputFields.state.value = 'CALIFORNIA';
-                if (inputFields.photoUrl) inputFields.photoUrl.value = 'https://placehold.co/150x200';
-                if (inputFields.signatureUrl) inputFields.signatureUrl.value = '';
-                loadCurrentInputDataAndUpdateDisplay();
             }
-        }
-        // 8. Вспомогательная функция для сбора данных из текущих полей ввода
-        function getCurrentInputData() {
-            return {
-                surname: inputFields.surname ? inputFields.surname.value.trim().toUpperCase() : '',
-                givenName: inputFields.givenName ? inputFields.givenName.value.trim().toUpperCase() : '',
-                passportId: inputFields.passportId ? inputFields.passportId.value.trim().toUpperCase() : '', // ДОБАВЛЕНО
-                citizenshipDate: inputFields.citizenshipDate ? inputFields.citizenshipDate.value.trim().toUpperCase() : '',
-                state: inputFields.state ? inputFields.state.value.trim().toUpperCase() : '',
-                photoUrl: inputFields.photoUrl ? inputFields.photoUrl.value.trim() : '',
-                signatureUrl: inputFields.signatureUrl ? inputFields.signatureUrl.value.trim() : ''
-            };
-        }
+            // 8. Вспомогательная функция для сбора данных из текущих полей ввода
+            function getCurrentInputData() {
+                return {
+                    surname: inputFields.surname ? inputFields.surname.value.trim().toUpperCase() : '',
+                    givenName: inputFields.givenName ? inputFields.givenName.value.trim().toUpperCase() : '',
+                    passportId: inputFields.passportId ? inputFields.passportId.value.trim().toUpperCase() : '', // ДОБАВЛЕНО
+                    citizenshipDate: inputFields.citizenshipDate ? inputFields.citizenshipDate.value.trim().toUpperCase() : '',
+                    state: inputFields.state ? inputFields.state.value.trim().toUpperCase() : '',
+                    photoUrl: inputFields.photoUrl ? inputFields.photoUrl.value.trim() : '',
+                    signatureUrl: inputFields.signatureUrl ? inputFields.signatureUrl.value.trim() : ''
+                };
+            }
 
-        // 9. Функция, которая собирает текущие данные из инпутов и обновляет отображение
-        function loadCurrentInputDataAndUpdateDisplay() {
-            const currentData = getCurrentInputData();
-            updatePassportDisplay(currentData);
-        }
+            // 9. Функция, которая собирает текущие данные из инпутов и обновляет отображение
+            function loadCurrentInputDataAndUpdateDisplay() {
+                const currentData = getCurrentInputData();
+                updatePassportDisplay(currentData);
+            }
 
 
-        // 10. Добавляем обработчик события на кнопку "Обновить паспорт"
-        // Проверяем, что кнопка существует, прежде чем навешивать обработчик
-        if (updateButton) {
-            updateButton.addEventListener('click', function () {
-                // console.log('Кнопка "Обновить паспорт" нажата.'); // Для отладки
-                // Шаг 1: Обновить отображение паспорта текущими данными из полей ввода
-                loadCurrentInputDataAndUpdateDisplay();
-                // Шаг 2: Сохранить текущие данные из полей ввода в localStorage
-                saveData();
-                // Можно добавить уведомление об успешном сохранении
-                // alert('Данные паспорта обновлены и сохранены!');
-            });
-        } else {
-            console.warn('Кнопка #update-passport не найдена. Функционал обновления и сохранения не будет работать.');
-        }
+            // 10. Добавляем обработчик события на кнопку "Обновить паспорт"
+            // Проверяем, что кнопка существует, прежде чем навешивать обработчик
+            if (updateButton) {
+                updateButton.addEventListener('click', function () {
+                    // console.log('Кнопка "Обновить паспорт" нажата.'); // Для отладки
+                    // Шаг 1: Обновить отображение паспорта текущими данными из полей ввода
+                    loadCurrentInputDataAndUpdateDisplay();
+                    // Шаг 2: Сохранить текущие данные из полей ввода в localStorage
+                    saveData();
+                    // Можно добавить уведомление об успешном сохранении
+                    // alert('Данные паспорта обновлены и сохранены!');
+                });
+            } else {
+                console.warn('Кнопка #update-passport не найдена. Функционал обновления и сохранения не будет работать.');
+            }
 
-        // 11. Загружаем данные при первой загрузке скрипта
-        // Это произойдет после определения всех функций и получения ссылок на элементы.
-        loadData();
+            // 11. Загружаем данные при первой загрузке скрипта
+            // Это произойдет после определения всех функций и получения ссылок на элементы.
+            loadData();
 
-        }) (); // Конец IIFE
+        })(); // Конец IIFE
     </script>
 
 </body>
